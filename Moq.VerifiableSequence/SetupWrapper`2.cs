@@ -1,6 +1,6 @@
 // BSD 3-Clause License
 //
-// Copyright (c) rubicon IT GmbH
+// Copyright (c) RUBICON IT GmbH
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@ using Moq.Language.Flow;
 namespace Moq;
 
 internal class SetupWrapper<T, TResult> : ISetup<T, TResult>
-where T : class
+    where T : class
 {
   private readonly ISetup<T, TResult> _implementation;
   private readonly VerifiableSequence _verifiableSequence;

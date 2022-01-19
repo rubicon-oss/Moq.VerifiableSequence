@@ -1,6 +1,6 @@
 // BSD 3-Clause License
 //
-// Copyright (c) rubicon IT GmbH
+// Copyright (c) RUBICON IT GmbH
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -31,10 +31,20 @@ using System;
 
 namespace Moq;
 
+/// <summary>
+/// Contains extension methods that are related to <see cref="Mock"/> instances.
+/// </summary>
 public static class MockExtensions
 {
+  /// <summary>
+  /// Perform an expectation in a <see cref="VerifiableSequence"/>. Call <see cref="VerifiableSequence"/>.<see cref="VerifiableSequence.Verify"/>
+  /// to ensure all setups in the sequence were executed in the expected order.
+  /// </summary>
   public static MockWrapper<T> InVerifiableSequence<T> (this Mock<T> mock, VerifiableSequence sequence) where T : class
   {
+    if (mock == null) throw new ArgumentNullException(nameof(mock));
+    if (sequence == null) throw new ArgumentNullException(nameof(sequence));
+
     return new MockWrapper<T>(mock, sequence);
   }
 }

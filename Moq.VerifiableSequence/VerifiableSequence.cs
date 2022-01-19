@@ -1,6 +1,6 @@
 // BSD 3-Clause License
 //
-// Copyright (c) rubicon IT GmbH
+// Copyright (c) RUBICON IT GmbH
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -34,27 +34,18 @@ using System.Text;
 
 namespace Moq;
 
+/// <summary>
+/// Class used to setup ordered expectations, which execution order can be asserted using <see cref="Verify"/>.
+/// </summary>
 public sealed class VerifiableSequence
 {
   private int _expectedStepIndex = 0;
   private readonly List<string> _steps = new();
 
-  public void AddStep (string action)
-  {
-    _steps.Add(action);
-  }
-
-  public void RecordStep (string action)
-  {
-    if (_expectedStepIndex == _steps.Count)
-      throw new VerifiableSequenceException($"All setups in this sequence were matched. Unexpected call '{action}'.");
-
-    var expected = _steps[_expectedStepIndex++];
-
-    if (expected != action)
-      throw new VerifiableSequenceException($"Executed action '{action}' does not match setup '{expected}'.");
-  }
-
+  /// <summary>
+  /// Verifies that all setups were executed in the specified order using the <see cref="MockExtensions.InVerifiableSequence{T}"/> method.
+  /// </summary>
+  /// <exception cref="VerifiableSequenceException">Thrown when not all setups were matched.</exception>
   public void Verify ()
   {
     if (_expectedStepIndex < _steps.Count)
@@ -72,5 +63,21 @@ public sealed class VerifiableSequence
 
       throw new VerifiableSequenceException(stringBuilder.ToString());
     }
+  }
+
+  internal void AddStep (string action)
+  {
+    _steps.Add(action);
+  }
+
+  internal void RecordStep (string action)
+  {
+    if (_expectedStepIndex == _steps.Count)
+      throw new VerifiableSequenceException($"All setups in this sequence were matched. Unexpected call '{action}'.");
+
+    var expected = _steps[_expectedStepIndex++];
+
+    if (expected != action)
+      throw new VerifiableSequenceException($"Executed action '{action}' does not match setup '{expected}'.");
   }
 }
