@@ -1,6 +1,6 @@
 // BSD 3-Clause License
 //
-// Copyright (c) rubicon IT GmbH
+// Copyright (c) RUBICON IT GmbH
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -156,6 +156,25 @@ public class VerifiableSequenceTests
   }
 
   [Test]
+  public void LooseMock_Getter_WrongOrder ()
+  {
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0"));
+    mock.InVerifiableSequence(seq).SetupGet(_ => _.Getter);
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("1"));
+
+    mock.Object.Method("0");
+
+    var action = () => mock.Object.Method("1");
+
+    Assert.That(
+        action,
+        Throws.InstanceOf<VerifiableSequenceException>()
+            .With.Message.EqualTo(@"Executed action '_ => _.Method(""1"")' does not match setup '_ => _.Getter'."));
+  }
+
+  [Test]
   public void LooseMock_Setter ()
   {
     var seq = new VerifiableSequence();
@@ -171,6 +190,25 @@ public class VerifiableSequenceTests
     var verification = () => seq.Verify();
 
     Assert.That(verification, Throws.Nothing);
+  }
+
+  [Test]
+  public void LooseMock_Setter_WrongOrder ()
+  {
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0"));
+    mock.InVerifiableSequence(seq).SetupSet(_ => _.Setter = "");
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("1"));
+
+    mock.Object.Method("0");
+
+    var actual = () => mock.Object.Method("1");
+
+    Assert.That(
+        actual,
+        Throws.InstanceOf<VerifiableSequenceException>()
+            .With.Message.EqualTo(@"Executed action '_ => _.Method(""1"")' does not match setup '_ => _.Setter = """"'."));
   }
 
   [Test]
@@ -192,6 +230,25 @@ public class VerifiableSequenceTests
   }
 
   [Test]
+  public void LooseMock_SetterWithGenericArg_WrongOrder ()
+  {
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0"));
+    mock.InVerifiableSequence(seq).SetupSet<string>(_ => _.Setter = "");
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("1"));
+
+    mock.Object.Method("0");
+
+    var actual = () => mock.Object.Method("1");
+
+    Assert.That(
+        actual,
+        Throws.InstanceOf<VerifiableSequenceException>()
+            .With.Message.EqualTo(@"Executed action '_ => _.Method(""1"")' does not match setup '_ => _.Setter = """"'."));
+  }
+
+  [Test]
   public void LooseMock_EventAdd ()
   {
     var seq = new VerifiableSequence();
@@ -207,6 +264,25 @@ public class VerifiableSequenceTests
     var verification = () => seq.Verify();
 
     Assert.That(verification, Throws.Nothing);
+  }
+
+  [Test]
+  public void LooseMock_EventAdd_WrongOrder ()
+  {
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0"));
+    mock.InVerifiableSequence(seq).SetupAdd(_ => _.Event += It.IsAny<Action>());
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("1"));
+
+    mock.Object.Method("0");
+
+    var actual = () => mock.Object.Method("1");
+
+    Assert.That(
+        actual,
+        Throws.InstanceOf<VerifiableSequenceException>()
+            .With.Message.EqualTo(@"Executed action '_ => _.Method(""1"")' does not match setup '_ => _.Event += It.IsAny<Action>()'."));
   }
 
   [Test]
@@ -228,6 +304,25 @@ public class VerifiableSequenceTests
   }
 
   [Test]
+  public void LooseMock_EventRemove_WrongOther ()
+  {
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0"));
+    mock.InVerifiableSequence(seq).SetupRemove(_ => _.Event -= It.IsAny<Action>());
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("1"));
+
+    mock.Object.Method("0");
+
+    var actual = () => mock.Object.Method("1");
+
+    Assert.That(
+        actual,
+        Throws.InstanceOf<VerifiableSequenceException>()
+            .With.Message.EqualTo(@"Executed action '_ => _.Method(""1"")' does not match setup '_ => _.Event -= It.IsAny<Action>()'."));
+  }
+
+  [Test]
   public void LooseMock_MethodReturningVoid ()
   {
     var seq = new VerifiableSequence();
@@ -246,6 +341,25 @@ public class VerifiableSequenceTests
   }
 
   [Test]
+  public void LooseMock_MethodReturningVoid_WrongOrder ()
+  {
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0"));
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method());
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("2"));
+
+    mock.Object.Method("0");
+
+    var action = () => mock.Object.Method("2");
+
+    Assert.That(
+        action,
+        Throws.InstanceOf<VerifiableSequenceException>()
+            .With.Message.EqualTo(@"Executed action '_ => _.Method(""2"")' does not match setup '_ => _.Method()'."));
+  }
+
+  [Test]
   public void StrictMock_MultipleSetupsWithCallsInOrder ()
   {
     var seq = new VerifiableSequence();
@@ -261,7 +375,7 @@ public class VerifiableSequenceTests
   }
 
   [Test]
-  public void LooseMock_CallBackAction ()
+  public void LooseMock_CallbackAction ()
   {
     var called = false;
     var seq = new VerifiableSequence();
@@ -276,7 +390,7 @@ public class VerifiableSequenceTests
   }
 
   [Test]
-  public void LooseMock_CallBackActionWithOneParameter ()
+  public void LooseMock_CallbackActionWithOneParameter ()
   {
     string argument = null;
     var seq = new VerifiableSequence();
@@ -291,7 +405,7 @@ public class VerifiableSequenceTests
   }
 
   [Test]
-  public void LooseMock_CallBackActionWithMultipleParameters ()
+  public void LooseMock_CallbackActionWithMultipleParameters ()
   {
     string argument0 = null;
     string argument1 = null;
@@ -315,7 +429,7 @@ public class VerifiableSequenceTests
   }
 
   [Test]
-  public void LooseMock_CallBackActionWithInvocationAction ()
+  public void LooseMock_CallbackActionWithInvocationAction ()
   {
     var called = false;
     var seq = new VerifiableSequence();
@@ -330,7 +444,7 @@ public class VerifiableSequenceTests
   }
 
   [Test]
-  public void LooseMock_CallBackActionWithDelegate_NotSupported ()
+  public void LooseMock_CallbackActionWithDelegate_NotSupported ()
   {
     var seq = new VerifiableSequence();
     var mock = new Mock<IMockable>();
@@ -338,5 +452,25 @@ public class VerifiableSequenceTests
     var setup = () => mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Callback((Delegate)new Action(() => { }));
 
     Assert.That(setup, Throws.InstanceOf<NotSupportedException>());
+  }
+
+  [Test]
+  public void LooseMock_Getter_ThrowsSetupOnReturnsThrowsGetterWrapper ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0"));
+    mock.InVerifiableSequence(seq).SetupGet(_ => _.Getter).Callback(() => called = true).Throws(new Exception());
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("1"));
+
+    mock.Object.Method("0");
+    Assert.That(() => _ = mock.Object.Getter, Throws.Exception);
+    mock.Object.Method("1");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
   }
 }

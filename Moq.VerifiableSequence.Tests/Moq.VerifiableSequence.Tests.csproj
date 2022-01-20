@@ -4,6 +4,7 @@
     <TargetFrameworks>net45;net5.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <LangVersion>10</LangVersion>
+    <!-- To prevent name conflicts, "VerifiableSequence" is not used in namespaces -->
     <RootNamespace>Moq.Tests</RootNamespace>
   </PropertyGroup>
 

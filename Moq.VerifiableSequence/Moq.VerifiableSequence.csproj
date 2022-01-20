@@ -4,7 +4,15 @@
     <TargetFrameworks>net45;netstandard2.0;netstandard2.1</TargetFrameworks>
     <Version>4.16.1.0</Version>
     <LangVersion>10</LangVersion>
+    <!-- Allows easier usage with Moq -->
     <RootNamespace>Moq</RootNamespace>
+    <Description>Provides verifiable sequences to Moq, where the exection order of setups can easily be verified.</Description>
+    <Authors>RUBICON IT GmbH</Authors>
+    <Copyright>Copyright (c) RUBICON IT GmbH, www.rubicon.eu</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/rubicon-oss/Moq.VerifiableSequence.git</RepositoryUrl>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Moq.VerifiableSequence.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\README.md">
+    <None Include="..\README.md">
       <Link>README.md</Link>
-    </Content>
+    </None>
   </ItemGroup>
 
 </Project>
