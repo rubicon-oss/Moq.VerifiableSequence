@@ -175,6 +175,66 @@ public class VerifiableSequenceTests
   }
 
   [Test]
+  public void LooseMock_Getter_CallbackAction_MockMethodNotCalled_FailsWithVerifiableSequenceException ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupGet(_ => _.Getter).Callback(() => called = true).Returns("");
+
+    var verification = () => seq.Verify();
+
+    Assert.That (
+        verification,
+        Throws.TypeOf<VerifiableSequenceException>()
+            .With.Message.EqualTo("Verification failed: Not all setups were matched:\r\n- [Expected] '_ => _.Getter'\r\n"));
+    Assert.That(called, Is.False);
+  }
+
+  [Test]
+  public void LooseMock_Getter_CallbackAction_SubsequentCalls ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupGet(_ => _.Getter).Callback(() => called = true).Returns("");
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Returns("");
+    _ = mock.Object.Getter;
+    mock.Object.Method("a", "b");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_Getter_CallbackAction_TriggersSecondCall ()
+  {
+    var calledFirst = false;
+    var calledSecond = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence (seq)
+        .SetupGet(_ => _.Getter)
+        .Callback(
+            () =>
+            {
+              calledFirst = true;
+              mock.Object.Method("a", "b");
+            })
+        .Returns("");
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Callback(() => calledSecond = true).Returns("");
+    _ = mock.Object.Getter;
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(calledFirst, Is.True);
+    Assert.That(calledSecond, Is.True);
+  }
+
+  [Test]
   public void LooseMock_Setter ()
   {
     var seq = new VerifiableSequence();
@@ -209,6 +269,65 @@ public class VerifiableSequenceTests
         actual,
         Throws.InstanceOf<VerifiableSequenceException>()
             .With.Message.EqualTo(@"Executed action '_ => _.Method(""1"")' does not match setup '_ => _.Setter = """"'."));
+  }
+
+  [Test]
+  public void LooseMock_Setter_CallbackAction_MockMethodNotCalled_FailsWithVerifiableSequenceException ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupSet(_ => _.Setter = "").Callback(() => called = true);
+
+    var verification = () => seq.Verify();
+
+    Assert.That (
+        verification,
+        Throws.TypeOf<VerifiableSequenceException>()
+            .With.Message.EqualTo("Verification failed: Not all setups were matched:\r\n- [Expected] '_ => _.Setter = \"\"'\r\n"));
+    Assert.That(called, Is.False);
+  }
+
+  [Test]
+  public void LooseMock_Setter_CallbackAction_SubsequentCalls ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupSet(_ => _.Setter = "").Callback(() => called = true);
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Returns("");
+    mock.Object.Setter = "";
+    mock.Object.Method("a", "b");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_Setter_CallbackAction_TriggersSecondCall ()
+  {
+    var calledFirst = false;
+    var calledSecond = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence (seq)
+        .SetupSet(_ => _.Setter = "")
+        .Callback(
+            () =>
+            {
+              calledFirst = true;
+              mock.Object.Method("a", "b");
+            });
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Callback(() => calledSecond = true).Returns("");
+    mock.Object.Setter = "";
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(calledFirst, Is.True);
+    Assert.That(calledSecond, Is.True);
   }
 
   [Test]
@@ -249,6 +368,65 @@ public class VerifiableSequenceTests
   }
 
   [Test]
+  public void LooseMock_SetterWithGenericArg_CallbackAction_MockMethodNotCalled_FailsWithVerifiableSequenceException ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupSet<string>(_ => _.Setter = "").Callback(_ => called = true);
+
+    var verification = () => seq.Verify();
+
+    Assert.That (
+        verification,
+        Throws.TypeOf<VerifiableSequenceException>()
+            .With.Message.EqualTo("Verification failed: Not all setups were matched:\r\n- [Expected] '_ => _.Setter = \"\"'\r\n"));
+    Assert.That(called, Is.False);
+  }
+
+  [Test]
+  public void LooseMock_SetterWithGenericArg_CallbackAction_SubsequentCalls ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupSet<string>(_ => _.Setter = "").Callback(_ => called = true);
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Returns("");
+    mock.Object.Setter = "";
+    mock.Object.Method("a", "b");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_SetterWithGenericArg_CallbackAction_TriggersSecondCall ()
+  {
+    var calledFirst = false;
+    var calledSecond = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence (seq)
+        .SetupSet<string>(_ => _.Setter = "")
+        .Callback(
+            _ =>
+            {
+              calledFirst = true;
+              mock.Object.Method("a", "b");
+            });
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Callback(() => calledSecond = true).Returns("");
+    mock.Object.Setter = "";
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(calledFirst, Is.True);
+    Assert.That(calledSecond, Is.True);
+  }
+
+  [Test]
   public void LooseMock_EventAdd ()
   {
     var seq = new VerifiableSequence();
@@ -283,6 +461,65 @@ public class VerifiableSequenceTests
         actual,
         Throws.InstanceOf<VerifiableSequenceException>()
             .With.Message.EqualTo(@"Executed action '_ => _.Method(""1"")' does not match setup '_ => _.Event += It.IsAny<Action>()'."));
+  }
+
+  [Test]
+  public void LooseMock_EventAdd_CallbackAction_MockMethodNotCalled_FailsWithVerifiableSequenceException ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupAdd(_ => _.Event += It.IsAny<Action>()).Callback(() => called = true);
+
+    var verification = () => seq.Verify();
+
+    Assert.That (
+        verification,
+        Throws.TypeOf<VerifiableSequenceException>()
+            .With.Message.EqualTo("Verification failed: Not all setups were matched:\r\n- [Expected] '_ => _.Event += It.IsAny<Action>()'\r\n"));
+    Assert.That(called, Is.False);
+  }
+
+  [Test]
+  public void LooseMock_EventAdd_CallbackAction_SubsequentCalls ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupAdd(_ => _.Event += It.IsAny<Action>()).Callback(() => called = true);
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Returns("");
+    mock.Object.Event += () => { };
+    mock.Object.Method("a", "b");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_EventAdd_CallbackAction_TriggersSecondCall ()
+  {
+    var calledFirst = false;
+    var calledSecond = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence (seq)
+        .SetupAdd(_ => _.Event += It.IsAny<Action>())
+        .Callback(
+            () =>
+            {
+              calledFirst = true;
+              mock.Object.Method("a", "b");
+            });
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Callback(() => calledSecond = true).Returns("");
+    mock.Object.Event += () => { };
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(calledFirst, Is.True);
+    Assert.That(calledSecond, Is.True);
   }
 
   [Test]
@@ -323,6 +560,65 @@ public class VerifiableSequenceTests
   }
 
   [Test]
+  public void LooseMock_EventRemove_CallbackAction_MockMethodNotCalled_FailsWithVerifiableSequenceException ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupRemove(_ => _.Event -= It.IsAny<Action>()).Callback(() => called = true);
+
+    var verification = () => seq.Verify();
+
+    Assert.That (
+        verification,
+        Throws.TypeOf<VerifiableSequenceException>()
+            .With.Message.EqualTo("Verification failed: Not all setups were matched:\r\n- [Expected] '_ => _.Event -= It.IsAny<Action>()'\r\n"));
+    Assert.That(called, Is.False);
+  }
+
+  [Test]
+  public void LooseMock_EventRemove_CallbackAction_SubsequentCalls ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).SetupRemove(_ => _.Event -= It.IsAny<Action>()).Callback(() => called = true);
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Returns("");
+    mock.Object.Event -= () => { };
+    mock.Object.Method("a", "b");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_EventRemove_CallbackAction_TriggersSecondCall ()
+  {
+    var calledFirst = false;
+    var calledSecond = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence (seq)
+        .SetupRemove(_ => _.Event -= It.IsAny<Action>())
+        .Callback(
+            () =>
+            {
+              calledFirst = true;
+              mock.Object.Method("a", "b");
+            });
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Callback(() => calledSecond = true).Returns("");
+    mock.Object.Event -= () => { };
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(calledFirst, Is.True);
+    Assert.That(calledSecond, Is.True);
+  }
+
+  [Test]
   public void LooseMock_MethodReturningVoid ()
   {
     var seq = new VerifiableSequence();
@@ -360,6 +656,66 @@ public class VerifiableSequenceTests
   }
 
   [Test]
+  public void LooseMock_MethodReturningVoid_CallbackAction_MockMethodNotCalled_FailsWithVerifiableSequenceException ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method()).Callback(() => called = true);
+
+    var verification = () => seq.Verify();
+
+    Assert.That (
+        verification,
+        Throws.TypeOf<VerifiableSequenceException>()
+            .With.Message.EqualTo("Verification failed: Not all setups were matched:\r\n- [Expected] '_ => _.Method()'\r\n"));
+    Assert.That(called, Is.False);
+  }
+
+  [Test]
+  public void LooseMock_MethodReturningVoid_CallbackAction_SubsequentCalls ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method()).Callback(() => called = true);
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Returns("");
+    mock.Object.Method();
+    mock.Object.Method("a", "b");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_MethodReturningVoid_CallbackAction_TriggersSecondCall ()
+  {
+    var calledFirst = false;
+    var calledSecond = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence (seq)
+        .Setup(_ => _.Method())
+        .Callback(
+            () =>
+            {
+              calledFirst = true;
+              mock.Object.Method("a", "b");
+            });
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Callback(() => calledSecond = true).Returns("");
+    mock.Object.Method();
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(calledFirst, Is.True);
+    Assert.That(calledSecond, Is.True);
+  }
+
+
+  [Test]
   public void StrictMock_MultipleSetupsWithCallsInOrder ()
   {
     var seq = new VerifiableSequence();
@@ -387,6 +743,66 @@ public class VerifiableSequenceTests
 
     Assert.That(verification, Throws.Nothing);
     Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_CallbackAction_MockMethodNotCalled_FailsWithVerifiableSequenceException ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Callback(() => called = true).Returns("");
+
+    var verification = () => seq.Verify();
+
+    Assert.That (
+        verification,
+        Throws.TypeOf<VerifiableSequenceException>()
+            .With.Message.EqualTo("Verification failed: Not all setups were matched:\r\n- [Expected] '_ => _.Method(\"0\")'\r\n"));
+    Assert.That(called, Is.False);
+  }
+
+  [Test]
+  public void LooseMock_CallbackAction_SubsequentCalls ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Callback(() => called = true).Returns("");
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Returns("");
+    mock.Object.Method("0");
+    mock.Object.Method("a", "b");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_CallbackAction_TriggersSecondCall ()
+  {
+    var calledFirst = false;
+    var calledSecond = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence (seq)
+        .Setup(_ => _.Method("0"))
+        .Callback(
+            () =>
+            {
+              calledFirst = true;
+              mock.Object.Method("a", "b");
+            })
+        .Returns ("");
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Callback(() => calledSecond = true).Returns("");
+    mock.Object.Method("0");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(calledFirst, Is.True);
+    Assert.That(calledSecond, Is.True);
   }
 
   [Test]
@@ -449,9 +865,139 @@ public class VerifiableSequenceTests
     var seq = new VerifiableSequence();
     var mock = new Mock<IMockable>();
 
-    var setup = () => mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Callback((Delegate)new Action(() => { }));
+    var setup = () => mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Callback((Delegate)new Action(() => { })).Returns("");
 
     Assert.That(setup, Throws.InstanceOf<NotSupportedException>());
+  }
+
+  [Test]
+  public void LooseMock_CallbackActionAfterReturn ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Returns("").Callback(() => called = true);
+    mock.Object.Method("0");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_CallbackActionAfterReturn_MockMethodNotCalled_FailsWithVerifiableSequenceException ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Returns("").Callback(() => called = true);
+
+    var verification = () => seq.Verify();
+
+    Assert.That (
+        verification,
+        Throws.TypeOf<VerifiableSequenceException>()
+            .With.Message.EqualTo("Verification failed: Not all setups were matched:\r\n- [Expected] '_ => _.Method(\"0\")'\r\n"));
+    Assert.That(called, Is.False);
+  }
+
+  [Test]
+  public void LooseMock_CallbackActionAfterReturn_SubsequentCalls ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Returns("").Callback(() => called = true);
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Returns("");
+    mock.Object.Method("0");
+    mock.Object.Method("a", "b");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_CallbackActionAfterReturn_TriggersSecondCall ()
+  {
+    var calledFirst = false;
+    var calledSecond = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence (seq)
+        .Setup(_ => _.Method("0"))
+        .Returns ("")
+        .Callback(
+            () =>
+            {
+              calledFirst = true;
+              mock.Object.Method("a", "b");
+            });
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("a", "b")).Callback(() => calledSecond = true).Returns("");
+    mock.Object.Method("0");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(calledFirst, Is.True);
+    Assert.That(calledSecond, Is.True);
+  }
+
+  [Test]
+  public void LooseMock_CallbackActionWithOneParameterAfterReturn ()
+  {
+    string argument = null;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Returns("").Callback((string a0) => argument = a0);
+    mock.Object.Method("0");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(argument, Is.EqualTo("0"));
+  }
+
+  [Test]
+  public void LooseMock_CallbackActionWithMultipleParametersAfterReturn ()
+  {
+    string argument0 = null;
+    string argument1 = null;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq)
+        .Setup(_ => _.Method("0", "1"))
+        .Returns("")
+        .Callback(
+            (string a0, string a1) =>
+            {
+              argument0 = a0;
+              argument1 = a1;
+            });
+    mock.Object.Method("0", "1");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(argument0, Is.EqualTo("0"));
+    Assert.That(argument1, Is.EqualTo("1"));
+  }
+
+  [Test]
+  public void LooseMock_CallbackActionWithInvocationActionAfterReturn ()
+  {
+    var called = false;
+    var seq = new VerifiableSequence();
+    var mock = new Mock<IMockable>();
+    mock.InVerifiableSequence(seq).Setup(_ => _.Method("0")).Returns("").Callback(new InvocationAction(_ => called = true));
+    mock.Object.Method("0");
+
+    var verification = () => seq.Verify();
+
+    Assert.That(verification, Throws.Nothing);
+    Assert.That(called, Is.True);
   }
 
   [Test]
