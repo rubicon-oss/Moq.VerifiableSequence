@@ -46,17 +46,17 @@ internal class ReturnsThrowsGetterWrapper<T, TProperty> : IReturnsThrowsGetter<T
 
   public IReturnsResult<T> Returns (TProperty value)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(value), _verifiableSequence);
+    return _implementation.Returns(value);
   }
 
   public IReturnsResult<T> Returns (Func<TProperty> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> CallBase ()
   {
-    return new ReturnsResultWrapper<T>(_implementation.CallBase(), _verifiableSequence);
+    return _implementation.CallBase();
   }
 
 #region Unchanged
