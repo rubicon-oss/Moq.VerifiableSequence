@@ -49,7 +49,7 @@ internal class SetupWrapper<T, TResult> : ISetup<T, TResult>
 
   public IReturnsThrows<T, TResult> Callback (InvocationAction action)
   {
-    var composite = action.GetAction() + (_ => _verifiableSequence.RecordStep(_implementation.ToString()));
+    var composite = (_ => _verifiableSequence.RecordStep(_implementation.ToString())) + action.GetAction();
     return _implementation.Callback(new InvocationAction(composite));
   }
 
@@ -60,195 +60,195 @@ internal class SetupWrapper<T, TResult> : ISetup<T, TResult>
 
   public IReturnsThrows<T, TResult> Callback (Action action)
   {
-    return _implementation.Callback(action + (() => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback((() => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1> (Action<T1> action)
   {
-    return _implementation.Callback(action + (_ => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback((_ => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2> (Action<T1, T2> action)
   {
-    return _implementation.Callback(action + ((_, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3> (Action<T1, T2, T3> action)
   {
-    return _implementation.Callback(action + ((_, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4> (Action<T1, T2, T3, T4> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5> (Action<T1, T2, T3, T4, T5> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6> (Action<T1, T2, T3, T4, T5, T6> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7> (Action<T1, T2, T3, T4, T5, T6, T7> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7, T8> (Action<T1, T2, T3, T4, T5, T6, T7, T8> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7, T8, T9> (Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> (Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> (Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> (Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> (Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> (Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> (Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   public IReturnsThrows<T, TResult> Callback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> (Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> action)
   {
-    return _implementation.Callback(action + ((_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback(((_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
+#region Unchanged
   public IReturnsResult<T> Returns (TResult value)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(value), _verifiableSequence);
+    return _implementation.Returns(value);
   }
 
   public IReturnsResult<T> Returns (InvocationFunc valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns (Delegate valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns (Func<TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1> (Func<T1, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> CallBase ()
   {
-    return new ReturnsResultWrapper<T>(_implementation.CallBase(), _verifiableSequence);
+    return _implementation.CallBase();
   }
 
   public IReturnsResult<T> Returns<T1, T2> (Func<T1, T2, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3> (Func<T1, T2, T3, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4> (Func<T1, T2, T3, T4, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5> (Func<T1, T2, T3, T4, T5, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6> (Func<T1, T2, T3, T4, T5, T6, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7> (Func<T1, T2, T3, T4, T5, T6, T7, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7, T8> (Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7, T8, T9> (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
   public IReturnsResult<T> Returns<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> valueFunction)
   {
-    return new ReturnsResultWrapper<T>(_implementation.Returns(valueFunction), _verifiableSequence);
+    return _implementation.Returns(valueFunction);
   }
 
-#region Unchanged
   public IThrowsResult Throws (Exception exception)
   {
     return _implementation.Throws(exception);
