@@ -75,9 +75,11 @@ public sealed class VerifiableSequence
     if (_expectedStepIndex == _steps.Count)
       throw new VerifiableSequenceException($"All setups in this sequence were matched. Unexpected call '{action}'.");
 
-    var expected = _steps[_expectedStepIndex++];
+    var expected = _steps[_expectedStepIndex];
 
     if (expected != action)
       throw new VerifiableSequenceException($"Executed action '{action}' does not match setup '{expected}'.");
+
+    _expectedStepIndex++;
   }
 }
