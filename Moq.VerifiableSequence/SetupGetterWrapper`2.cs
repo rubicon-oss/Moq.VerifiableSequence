@@ -49,9 +49,7 @@ internal class SetupGetterWrapper<T, TProperty> : ISetupGetter<T, TProperty>
 
   public IReturnsThrowsGetter<T, TProperty> Callback (Action action)
   {
-    return new ReturnsThrowsGetterWrapper<T, TProperty>(
-        _implementation.Callback((() => _verifiableSequence.RecordStep(_implementation.ToString())) + action),
-        _verifiableSequence);
+    return _implementation.Callback((() => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
 #region Unchanged
