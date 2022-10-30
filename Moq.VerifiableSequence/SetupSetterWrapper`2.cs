@@ -50,7 +50,7 @@ internal class SetupSetterWrapper<T, TProperty> : ISetupSetter<T, TProperty>
 
   public ICallbackResult Callback (Action<TProperty> action)
   {
-    return _implementation.Callback(action + (_ => _verifiableSequence.RecordStep(_implementation.ToString())));
+    return _implementation.Callback((_ => _verifiableSequence.RecordStep(_implementation.ToString())) + action);
   }
 
   #region Unchanged
