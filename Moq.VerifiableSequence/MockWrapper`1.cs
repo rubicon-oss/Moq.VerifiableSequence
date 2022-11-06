@@ -29,12 +29,11 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Linq.Expressions;
-using Moq.Language;
 using Moq.Language.Flow;
 
 namespace Moq;
 
-public sealed class MockWrapper<T> : ISetupConditionResult<T>
+public sealed class MockWrapper<T>
     where T : class
 {
   private readonly Mock<T> _mock;
