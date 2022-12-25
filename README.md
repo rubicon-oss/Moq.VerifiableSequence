@@ -1,5 +1,8 @@
 # Moq.VerifiableSequence
 
+## Availability
+NuGet-packages for Moq.VerifiableSequence are available at https://nuget.re-motion.org/feeds/re-motion-infrastructure/Moq.VerifiableSequence
+
 ## Usage
 
 ```c#
