@@ -45,6 +45,10 @@ public sealed class MockWrapper<T>
     _verifiableSequence = verifiableSequence;
   }
 
+  internal Mock<T> Mock => _mock;
+
+  internal VerifiableSequence VerifiableSequence => _verifiableSequence;
+
   /// <inheritdoc cref="Mock{T}.Setup"/>
   public ISetup<T> Setup (Expression<Action<T>> expression) =>
       new SetupWrapper<T>(_mock.Setup(expression), _verifiableSequence);
