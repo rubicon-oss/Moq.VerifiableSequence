@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <Version>4.16.1.1</Version>
+    <Version>4.16.1.2</Version>
     <LangVersion>10</LangVersion>
     <!-- Allows easier usage with Moq -->
     <RootNamespace>Moq</RootNamespace>
