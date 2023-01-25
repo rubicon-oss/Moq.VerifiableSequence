@@ -6,7 +6,7 @@
     <LangVersion>10</LangVersion>
     <!-- Allows easier usage with Moq -->
     <RootNamespace>Moq</RootNamespace>
-    <Description>Provides verifiable sequences to Moq, where the exection order of setups can easily be verified.</Description>
+    <Description>Provides verifiable sequences to Moq, where the execution order of setups can easily be verified.</Description>
     <Authors>RUBICON IT GmbH</Authors>
     <Copyright>Copyright (c) RUBICON IT GmbH, www.rubicon.eu</Copyright>
     <RepositoryType>git</RepositoryType>
